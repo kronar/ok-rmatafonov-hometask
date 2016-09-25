@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ok-qa-module</artifactId>
+        <groupId>ru.ok.rmatafonov</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>ok-qa-testing-functional</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.ok.rmatafonov</groupId>
+            <artifactId>ok-qa-configs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.ok.rmatafonov</groupId>
+            <artifactId>ok-qa-services-webdriver-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.ok.rmatafonov</groupId>
+            <artifactId>ok-qa-services-page-objects</artifactId>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <!-- Cucumber -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-core</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+        </dependency>
+
+        <!-- Reporting: Allure -->
+        <dependency>
+            <groupId>ru.yandex.qatools.allure</groupId>
+            <artifactId>allure-cucumber-jvm-adaptor</artifactId>
+        </dependency>
+
+        <!-- Working with date and time simplification -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <includes>
+                        <include>**/*Runner.class</include>
+                    </includes>
+                    <argLine>
+                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+                    </argLine>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>ru.yandex.qatools.allure.cucumberjvm.AllureRunListener</value>
+                        </property>
+                    </properties>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.slf4j</groupId>
+                                <artifactId>slf4j-log4j12</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>log4j</groupId>
+                                <artifactId>log4j</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>ru.yandex.qatools.allure</groupId>
+                <artifactId>allure-maven-plugin</artifactId>
+                <configuration>
+                    <version>1.4.24.RC2</version>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <phase>post-integration-test</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
